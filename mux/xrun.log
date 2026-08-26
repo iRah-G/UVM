@@ -1,0 +1,86 @@
+xrun: 22.03-s012: (c) Copyright 1995-2023 Cadence Design Systems, Inc.
+TOOL:	xrun	22.03-s012: Started on Aug 25, 2026 at 17:46:12 CDT
+xrun
+	-sv
+	uvm_tb.sv
+Recompiling... reason: file './uvm_tb.sv' is newer than expected.
+	expected: Tue Aug 25 17:24:43 2026
+	actual:   Tue Aug 25 17:46:05 2026
+file: uvm_tb.sv
+	module worklib.mux_dut:sv
+		errors: 0, warnings: 0
+//******************* UVM_AGENT *******************
+  |
+xmvlog: *W,NOCMIC (uvm_tb.sv,109|2): error-prone block comment nested within block comment [2.3(IEEE)].
+//******************* UVM_DRIVER *******************
+  |
+xmvlog: *W,NOCMIC (uvm_tb.sv,128|2): error-prone block comment nested within block comment [2.3(IEEE)].
+//******************* UVM_MONITOR *******************
+  |
+xmvlog: *W,NOCMIC (uvm_tb.sv,154|2): error-prone block comment nested within block comment [2.3(IEEE)].
+//******************* UVM_SCOREBOARD *******************
+  |
+xmvlog: *W,NOCMIC (uvm_tb.sv,179|2): error-prone block comment nested within block comment [2.3(IEEE)].
+//*******************  UVM_SEQUENCE  *******************
+  |
+xmvlog: *W,NOCMIC (uvm_tb.sv,203|2): error-prone block comment nested within block comment [2.3(IEEE)].
+//*******************  UVM_SEQUENCER *******************
+  |
+xmvlog: *W,NOCMIC (uvm_tb.sv,227|2): error-prone block comment nested within block comment [2.3(IEEE)].
+	Total errors/warnings found outside modules and primitives:
+		errors: 0, warnings: 6
+		Caching library 'worklib' ....... Done
+	Elaborating the design hierarchy:
+	Top level design units:
+		mux_if
+		top
+xmelab: *W,DSEMEL: This SystemVerilog design will be simulated as per IEEE 1800-2009 SystemVerilog simulation semantics. Use -disable_sem2009 option for turning off SV 2009 simulation semantics.
+    mux_dut dut_instance (
+                       |
+xmelab: *W,CUVDSI (./uvm_tb.sv,48|23): 1 input port was not connected by dot-star:
+xmelab: (./uvm_tb.sv,26): reset
+
+	Building instance overlay tables: .................... Done
+	Generating native compiled code:
+		worklib.mux_dut:sv <0x27cfceab>
+			streams:   2, words:   484
+		worklib.top:sv <0x64e05629>
+			streams:   9, words:  7668
+	Building instance specific data structures.
+	Loading native compiled code:     .................... Done
+	Design hierarchy summary:
+		              Instances  Unique
+		Modules:              2       2
+		Interfaces:           1       1
+		Registers:           11      11
+		Scalar wires:         3       -
+		Vectored wires:       4       -
+		Always blocks:        1       1
+		Initial blocks:       4       4
+		Pseudo assignments:   4       4
+	Writing initial simulation snapshot: worklib.mux_if:sv
+Loading snapshot worklib.mux_if:sv .................... Done
+SVSEED default: 1
+xmsim: *W,DSEM2009: This SystemVerilog design is simulated as per IEEE 1800-2009 SystemVerilog simulation semantics. Use -disable_sem2009 option for turning off SV 2009 simulation semantics.
+xcelium> source /opt/coe/cadence/XCELIUM/tools/xcelium/files/xmsimrc
+xcelium> run
+xmsim: *W,DVEXACC: some objects excluded from $dumpvars due to access restrictions, use +access+r on command line for access to all objects.
+            File: ./uvm_tb.sv, line = 59, pos = 16
+           Scope: top
+            Time: 0 FS + 0
+
+time:                    0, a: 0, b: 0, sel: 0, c: 0
+time:                   20, a: 197, b: 118, sel: 1, c: 197
+time:                   30, a: 182, b: 25, sel: 1, c: 182
+time:                   40, a: 72, b: 55, sel: 1, c: 72
+time:                   50, a: 60, b: 247, sel: 0, c: 247
+time:                   60, a: 62, b: 71, sel: 0, c: 71
+time:                   70, a: 86, b: 149, sel: 1, c: 86
+time:                   80, a: 185, b: 252, sel: 0, c: 252
+time:                   90, a: 149, b: 198, sel: 1, c: 149
+time:                  100, a: 10, b: 178, sel: 1, c: 10
+time:                  110, a: 106, b: 87, sel: 0, c: 87
+Simulation complete via $finish(1) at time 115 NS + 0
+./uvm_tb.sv:76         $finish;
+xcelium> exit
+TOOL:	xrun	22.03-s012: Exiting on Aug 25, 2026 at 17:46:14 CDT  (total: 00:00:02)

@@ -1,0 +1,20 @@
+s1(25Aug2026:16:04:20):  xrun -sv uvm_tb.sv -uvm 
+s2(25Aug2026:16:05:18):  xrun -sv uvm_tb.sv -uvm 
+s3(25Aug2026:16:09:05):  xrun -sv uvm_tb.sv -uvm 
+s4(25Aug2026:16:10:52):  xrun -sv uvm_tb.sv 
+s5(25Aug2026:16:11:22):  xrun -sv uvm_tb.sv 
+s6(25Aug2026:16:12:03):  xrun -sv uvm_tb.sv 
+s7(25Aug2026:16:23:02):  xrun -sv uvm_tb.sv -access+r 
+s8(25Aug2026:16:23:11):  xrun -sv uvm_tb.sv +access+r 
+s9(25Aug2026:16:24:05):  xrun -sv uvm_tb.sv +access+r 
+s10(25Aug2026:16:25:01):  xrun -sv uvm_tb.sv +access+r 
+s11(25Aug2026:16:25:53):  xrun -sv uvm_tb.sv +access+r 
+s12(25Aug2026:16:27:21):  xrun -sv uvm_tb.sv +access+r 
+s13(25Aug2026:16:27:53):  xrun -sv uvm_tb.sv +access+r 
+s14(25Aug2026:16:29:30):  xrun -sv uvm_tb.sv +access+r 
+s15(25Aug2026:16:31:24):  xrun -sv uvm_tb.sv +access+r -gui 
+s16(25Aug2026:17:05:19):  xrun -sv uvm_tb.sv +access+r -gui "-s " 
+s17(25Aug2026:17:08:54):  xrun -sv uvm_tb.sv 
+s18(25Aug2026:17:19:37):  xrun -sv uvm_tb.sv 
+s19(25Aug2026:17:28:40):  xrun -sv uvm_tb.sv 
+s20(25Aug2026:17:46:12):  xrun -sv uvm_tb.sv 

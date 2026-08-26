@@ -1,0 +1,86 @@
+$date
+    Aug 25, 2026  17:05:23
+$end
+$version
+    TOOL:	xmsim	22.03-s012
+$end
+$timescale
+    1 ns
+$end
+
+$scope module top $end
+$var reg       1 !    clk $end
+$var reg       1 "    rst $end
+$var reg       1 #    a $end
+$var reg       1 $    b $end
+$var reg       1 %    sel $end
+$upscope $end
+
+$enddefinitions $end
+$dumpvars
+0!
+1"
+0#
+0$
+0%
+$end
+#5
+1!
+#10
+0!
+#15
+1!
+0"
+#20
+0!
+#25
+1!
+#30
+0!
+1$
+#35
+1!
+#40
+0!
+1#
+1%
+#45
+1!
+#50
+0!
+0$
+0%
+#55
+1!
+#60
+0!
+1%
+#65
+1!
+#70
+0!
+0%
+#75
+1!
+#80
+0!
+0#
+#85
+1!
+#90
+0!
+1#
+1$
+#95
+1!
+#100
+0!
+0#
+0$
+#105
+1!
+#110
+0!
+1#
+#115
+1!

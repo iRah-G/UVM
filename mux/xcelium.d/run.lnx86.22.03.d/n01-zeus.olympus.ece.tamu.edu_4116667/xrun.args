@@ -1,0 +1,8 @@
+//
+// File created by:  xrun
+// Do not modify this file
+//
+-sv
+uvm_tb.sv
++access+r
+-gui

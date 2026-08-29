@@ -1,6 +1,6 @@
 // ************************** MUX DUT and UVM TB for the same **************************
 
-include <uvm_macros.svh> //bring all uvm macros and tools to this file
+`include <uvm_macros.svh> //bring all uvm macros and tools to this file
  import uvm_pkg::*;        //import entitre UVM package like classes, types etc
 
 //UVM Interface
@@ -17,8 +17,6 @@ interface mux_if (
     logic sel;
     logic [7:0] c;
     
-    modport driver (input clk, rst, output a, b, sel, input c);
-    modport monitor (input clk, rst, a, b, sel, c);
 endinterface
 
 module mux_dut(
@@ -37,6 +35,7 @@ module mux_dut(
     end
 endmodule
 
+// TESTBENCH
 module top;
     logic clk, rst;
     logic [7:0]a;
@@ -49,6 +48,12 @@ module top;
     mux_dut dut_instance (
         .*
     );
+
+        
+   initial begin
+        uvm_config_db#(virtual mux_if)::set(null, "*","vif",inf);
+        run_test("my_test");
+   end
     
     initial begin
         clk = 0;
@@ -69,8 +74,8 @@ module top;
         rst = 0;
         repeat(10) begin
             @(negedge clk);
-            a = $urandom;
-            b = $urandom;
+            a   = $urandom;
+            b   = $urandom;
             sel = $urandom;
         end
         @(posedge clk);
@@ -80,17 +85,49 @@ module top;
     initial begin
         $monitor("time: %t, a: %0d, b: %0d, sel: %0d, c: %0d", $time, a, b, sel, c);
     end
-    
- //   initial begin
-   //     run_test();
-   // end
+
 endmodule
-/*
-******************* UVM_ENV *******************
+
+// ******************* UVM_TESTBENCH ******************* 
+// use either this testbench or the above SV testbench comment other one out while implementing
+
+class my_item extends uvm_sequence_item;
+
+    rand logic[7:0] a;
+    rand logic[7:0] b;
+    rand logic[7:0] c;
+    rand logic[1:0] sel;
+
+    `uvm_object_utils_begin(my_item)
+        `uvm_field_int(a, UVM_PRINT)
+        `uvm_field_int(b, UVM_PRINT)
+        `uvm_field_int(c, UVM_PRINT)
+        `uvm_field_int(sel, UVM_PRINT)
+    `uvm_object_utils_end
+
+    function new(string name = " ");
+        super.new(name);
+    endfunction:new
+
+    constraint a_and_b_dist{
+        a dist{
+            [8'h00:8'hAA]:=50,
+            [8'hAB:8'hFF]:=50
+        };
+
+        b dist{
+            [8'h00:8'hAA]:=80,
+            [8'hAB:8'hFF]:=20
+        }
+    }
+
+endclass: my_item
+
+// ******************* UVM_ENV *******************
 
 class mux_env extends uvm_env;
 
-uvm_component_utils(mux_env); //registers the class with the factory
+uvm_component_utils(mux_env) //registers the class with the factory
 
 //env has agent and scoreboard their handles go here
     mux_agent agent_h;            
@@ -111,7 +148,7 @@ endclass
 
 class mux_agent extends uvm_agent;
 
-uvm_component_utils(mux_agent);
+uvm_component_utils(mux_agent)
 
     mux_driver driver_h;
     mux_monitor monitor_h;
@@ -128,14 +165,21 @@ endclass
 
 //******************* UVM_DRIVER *******************
 
-class mux_driver extends uvm_driver #(mux_transaction);
+class mux_driver extends uvm_driver #(my_item);
 
-    `uvm_component_utils(mux_driver);
+    `uvm_component_utils(mux_driver)
 
     // Constructor and member variables (if any)
     virtual mux_if vif;  //handle to the interface
 
-    function void build_phase(uvm_phase phase);
+    int count =0;
+
+    function new(string name = "", uvm_component parent)
+         super.new(name, parent);
+         `uvm_info("DRIVER","*****Driver constructor called*****", uvm_info)
+    endfunction
+
+    virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         //get interface handle from config_db
         if (uvm_config_db#(virtual mux_if)::get(this, "", "vif", vif)) begin
@@ -147,21 +191,48 @@ class mux_driver extends uvm_driver #(mux_transaction);
 
     task run_phase(uvm_phase phase);
         // Task where actual driving logic goes
-        // For now, leave empty
-    endtask
 
-endclass
+        // Initial condition
+        vif.rst = 1;
+        vif.a = 0;
+        vif.b = 0;
+        vif.sel = 0;
+
+        repeat(2) @(posedge vif.clk);
+        vif.rst =0;
+
+        forever begin
+            seq_item_port.get_next_item(req);
+            //Coonverted object level attributes to pin level
+            vif.a <= req.a;
+            vif.b <= req.b;
+            vif.sel <= req.sel;
+            @(posedge vif.clk);
+            seq_item_port.item_done();
+            count++;
+        end
+
+    endtask:run_phase
+
+    virtual function void report_phase(uvm_phase phase);
+        `uvm_info("DRV", $sformatf(":::::::Sent %0d packets:::::::", count), UVM_LOW);
+    endfunction:report_phase
+
+endclass:mux_driver
 
 //******************* UVM_MONITOR *******************
 
 class mux_monitor extends uvm_monitor;
 
-    `uvm_component_utils(mux_monitor);
+    `uvm_component_utils(mux_monitor)
+
+    uvm_analysis_port#(my_item) ap;
 
     virtual mux_if vif;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase)
+        ap = new("ap", this);
         if (uvm_config_db#(virtual mux_if)::get(this, "", "vif", vif)) begin
             `uvm_info("MON_VIF","Monitor can access the virtual function")
         end
@@ -172,10 +243,36 @@ class mux_monitor extends uvm_monitor;
     task run_phase(uvm_phase phase);
         // Code to sample interface signals, package into transactions
         // Usually forever loop sampling signals
-        // For now, leave empty or comments
-    endtask
 
-endclass
+        // Store the values observed here
+        logic[7:0] captured_a, captured_b;
+        logic[1:0] captured_sel;
+
+        // wait till reset is removed
+        @(posedge vif.rst);
+
+        forever begin
+                my_item txn;
+                // on posedge capture values of a, b and sel
+                @(posedge vif.clk);
+                captured_a = vif.a;
+                captured_b = vif.b;
+                captured_sel = vif.sel;
+
+                @(posedge vif.clk);
+                txn = my_item::type_id::create("txn");
+                txn.a = captured_a;
+                txn.b = captured_b;
+                txn.sel = captured_sel;
+                txn.c = vif.c;
+
+                `uvm_info("MONITOR",$sformatf("Observed a = %0d, b = %0d, sel =%0d", txn.a, txn.b, txn.sel));
+                ap.write(txn);
+        end
+
+    endtask:run_phase
+
+endclass: my_monitor
 
 //******************* UVM_SCOREBOARD *******************
 
@@ -184,6 +281,15 @@ class mux_scoreboard extends uvm_scoreboard;
     `uvm_component_utils(mux_scoreboard)
 
     virtual mux_if vif;
+    
+    uvm_analysis_imp#(my_item, mux_scoreboard) analysis_imp;
+    int match = 0;
+    int mis_match = 0;
+    
+    function new(string name = " ",uvm_component parent)
+        super.new(name, parent);
+        `uvm_info("SCB", "::::::::Scoreboard constructor called :::::::", UVM_INFO)
+    endfunction:new
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
@@ -192,53 +298,158 @@ class mux_scoreboard extends uvm_scoreboard;
         end
         else
             `uvm_error("ERROR: Scoreboard cannot access virtual function")
-    endfunction  
 
-     // Method to check outputs (stub for now)
-    function void check_output(mux_transaction trans);
-        // Compare actual with expected values; for now, leave this empty
-    endfunction
+        analysis_imp = new("analysis_imp",this);
+    endfunction: build_phase
 
-endclass       
+    virtual function void write(my_item txn);
+        logic [7:0] expected_data;
+
+        //Calculate expected output based on mux logic
+        if(txn.sel ==0)
+            expected_data = txn.a;
+        else
+            expected_data = txn.b;
+
+        // Compare actual with expected
+        if(expected_data == txn.c) begin
+            match++
+            `uvm_info("SCB", $sformatf("MATCH: sel =%0d, a = %0d, b=%0d, expected =%0d, actual =%0d", 
+            txn.sel, txn.a, txn.b, expected_data, txn.out), UVM_LOW)
+        end
+        else begin
+            mis_match++;
+            `uvm_error("SCB",$sformatf("MISMATCH: sel =%0d, a = %0d, b=%0d, expected =%0d, actual =%0d", 
+            txn.sel, txn.a, txn.b, expected_data, txn.out), UVM_LOW)
+        end
+    endfunction:write
+
+    virtual function void report_phase(uvm_phase phase)
+        `uvm_info("SCB",$sformatf("Total Matches = %0d, Total Mismatches = %0d", match, mis_match), UVM_LOW);
+    endfunction:report_phase
+
+
+endclass: mux_scoreboard    
 
 //*******************  UVM_SEQUENCE  *******************
 
-class mux_sequence extends uvm_sequence;
+class mux_sequence extends uvm_sequence#(my_item);
 
-    `uvm_component_utils(mux_sequence);
+    `uvm_object_utils(mux_sequence)
 
-    virtual mux_if vif;
-
-    function new(string name = "mux_sequence");
+    function new(string name = "");
         super.new(name);
-    endfunction
+        `uvm_info("SEQ",":::::::Sequence constructor Called:::::::", UVM_INFO)
+    endfunction:new
 
-    task body();
-        mux_transaction tr;
-        tr = mux_transaction::type_id::create("tr");
-        //Optionally randomize transaction fields
-        //Start item, randomize, finish item
-        start_item(tr);
-        //randomize(tr); //If you use randomization
-        finish_item(tr);
+
+    virtual task body();
+        `uvm_info("SEQ","-- Sequence body --", UVM_LOW)
+
+        repeat(10) begin
+            my_item req = my_item::type_id::create("req");
+            start_item(req);
+            assert(req.randomize());
+            finish_item(req);
+        end
     endtask
 
-endclass
+endclass: mux_sequence
 
 //*******************  UVM_SEQUENCER *******************
 
-class mux_sequencer extends uvm_sequencer #(mux_transaction);
+class mux_sequencer extends uvm_sequencer #(my_item);
 
-    `uvm_component_utils(mux_sequencer);
+    `uvm_component_utils(mux_sequencer)
 
-    function new(string name = "mux_sequencer");
-        super.new(name);
+    function new(string name = "", uvm_component parent);
+        super.new(name, parent);
     endfunction
 
     //No extra methods for a basic sequencer
 
 endclass
-*/
 
+//*******************  UVM_AGENT *******************
 
+class mux_agent extends uvm_agent;
 
+    `uvm_component_utils(mux_agent)
+
+    mux_driver driver;
+    mux_monitor monitor;
+    mux_sequencer sequencer;
+
+    `uvm_component_utils(mux_agent)
+
+    function new(string name =" ", uvm_component parent);
+        super.new(name, parent);
+        `uvm_info("AGENT",":::::::Agent constructor called:::::::", UVM_INFO);
+    endfunction: new
+
+    virtual function void build_phase(uvm_phase phase);
+        monitor = mux_monitor::type_id::create("monitor", this);
+        driver = mux_driver::type_id::create("driver",this);
+        sequencer = mux_sequencer::type_id::create("sequencer",this);
+    endfunction:build_phase
+
+    virtual function void connect_phase(uvm_phase phase);
+        driver.seq_item_port.connect(sequencer.seq_item_export);
+        `uvm_info("AGENT","::::::: Connected Driver and Sequencer :::::::", UVM_LOW);
+    endfunction:connect_phase
+
+endclass:my_agent
+
+//*******************  UVM_ENV *******************
+
+class mux_env extends uvm_env;
+    `uvm_component_utils(mux_env)
+
+    mux_agent agent;
+    mux_scoreboard scoreboard;
+
+    function new(string name =" ", uvm_component parent);
+        super.new(name,parent);
+        `uvm_info("ENV":"::::::: Env Constructor Called :::::::", UVM_LOW);
+    endfunction:new
+
+    virtual function build_phase(uvm_phase phase);
+        agent = mux_agent::type_id::create("agent", this);
+        scoreboard = mux_scoreboard::type_id::create("scoreboard",this);
+    endfunction:build_phase
+
+    virtual function connect_phase(uvm_phase phase);
+        agent.monitor.ap.connect(scoreboard.analysis_imp);
+        `uvm_info("ENV","::::::::: Connected Monitor and Scoreboard::::::::", UVM_LOW);
+    endfunction:connect_phase
+
+endclass:uvm_env
+
+//*******************  UVM_TEST *******************
+
+class mux_test extends uvm_test;
+
+    `uvm_component_utils(mux_test)
+
+    mux_env env;
+    mux_sequence sequence;
+
+    function new(string name =" ", uvm_component parent);
+        super.new(name, parent);
+        `uvm_info("TEST","::::::::Test constructor called ::::::::", UVM_INFO);
+    endfunction:new
+
+    virtual function build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        env = mux_env::type_id::create("env", this);
+        sequence = mux_sequence::type_id::create("sequence",this);
+    endfunction: build_phase
+
+    virtual task run_phase(uvm_phase phase);
+        phase.raise_objection(this);
+        seq.start(env.agent.sequencer);
+         #100;
+         phase.drop_objection(this);
+    endtask:run_phase
+
+endclass:mux_test

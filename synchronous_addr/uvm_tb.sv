@@ -99,15 +99,15 @@ class my_driver extends uvm_driver #(my_item);
 
     function new(string name = " ", uvm_component parent);
         super.new(name, parent);
-        `uvm_info("DRIVER","======= Driver constructor called =======", UVM_INFO);
+        `uvm_info("DRIVER","======= Driver constructor called =======", UVM_INFO)
     endfunction:new
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         if(uvm_config_db#(virtual adder_if)::get(this," ","vif",vif)) begin
-            `uvm_info("DRV", "*** Driver can access the virtual interface ***", UVM_INFO);
+            `uvm_info("DRV", "*** Driver can access the virtual interface ***", UVM_INFO)
         end
-        else `uvm_errpr("DRV","*** Driver cannot access the virtual interface ***");
+        else `uvm_error("DRV","*** Driver cannot access the virtual interface ***")
     endfunction:build_phase
 
     virtual task run_phase(uvm_phase phase);
@@ -133,7 +133,7 @@ class my_driver extends uvm_driver #(my_item);
     endtask:run_phase
 
     virtual function void report_phase(uvm_phase phase);
-        `uvm_info("DRV",$sformatf("::::::: Sent %0d packets :::::::", count) UVM_LOW);
+        `uvm_info("DRV",$sformatf("::::::: Sent %0d packets :::::::", count) UVM_LOW)
     endfunction:report_phase
 
 endclass:my_driver
@@ -150,7 +150,7 @@ class my_monitor extends uvm_monitor#(my_item);
 
     function new (string name = " ", uvm_component parent);
         super.new(name, parent);
-        `uvm_info("MONITOR","======= Monitor constructor called =======", UVM_INFO);
+        `uvm_info("MONITOR","======= Monitor constructor called =======", UVM_LOW)
     endfunction: new
 
     virtual function void build_phase(uvm_phase phase);
@@ -179,7 +179,7 @@ class my_monitor extends uvm_monitor#(my_item);
             txn.b = captured_b;
             txn.sum = vif.sum;
 
-            `uvm_info("MONITOR", $sformatf("Observed a = %0d, b= %0d, sum = %0d") txn.a, txn.b, txn.sum), UVM_LOW);
+            `uvm_info("MONITOR", $sformatf("Observed a = %0d, b= %0d, sum = %0d") txn.a, txn.b, txn.sum, UVM_LOW)
             ap.write(txn);
         end
     endtask:run_phase
@@ -198,30 +198,130 @@ class my_scoreboard extends uvm_scoreboard;
 
     function new(string name = " ", uvm_component parent);
         super.new(name, parent);
-        `uvm_info("SCB","======= Scoreboard constructor called ======", UVM_LOW);
+        `uvm_info("SCB","======= Scoreboard constructor called ======", UVM_LOW)
     endfunction:new
 
     virtual function void build_phase(uvm_phase phase);
         logic [8:0] expected_sum = txn.a + txn.b;
         if(expected_sum == txn.sum) begin
             match++;
-            `uvm_info("SCB",$sformatf("Observed == Expected, Observed Sum = %0d, Expected Sum = %0d", txn.sum, expected_sum), UVM_LOW);
+            `uvm_info("SCB",$sformatf("Observed == Expected, Observed Sum = %0d, Expected Sum = %0d", txn.sum, expected_sum), UVM_LOW)
         end
         else begin
             mis_match++;
-            `uvm_error("SCB",$sformatf("********* Observed != Expected, Observed Sum = %0d, Expected Sum = %0d *********", txn.sum, expected_sum));
+            `uvm_error("SCB",$sformatf("********* Observed != Expected, Observed Sum = %0d, Expected Sum = %0d *********", txn.sum, expected_sum))
         end
 
     virtual function void report_phase(uvm_phase phase);
-        `uvm_info("SCB",$sformatf("Total Matches = %0d, Total Mismatches = %0d", match, mis_match), UVM_LOW);
+        `uvm_info("SCB",$sformatf("Total Matches = %0d, Total Mismatches = %0d", match, mis_match), UVM_LOW)
     endfunction:build_phase
 
 endclass:my_scoreboard
 
-// ************************** UVM_SCOREBOARD **************************
+// ************************** UVM_SEQUENCE **************************
 
-class my_scoerboard extends uvm_scoreboard;
+class my_seq extends uvm_sequence;
 
-    `uvm_component_utils(uvm_scoreboard)
+    `uvm_object_utils(my_sequence);
 
-    uvm_analysis_imp#(my_item, my_scoreboard)
+    function new(string name =" ");
+        super.new(name);
+        `uvm_info("SEQ","====== Sequence Constructor Called ====== ", UVM_LOW)
+    endfunction:new
+
+    virtual task body();
+        `uvm_info("SEQ"," -- Sequence Body --", UVM_LOW)
+
+        repeat(10) begin
+            my_item req = my_item::type_id::create("req");
+            start_item(req);
+            assert(req.randomize());
+            finish_item(req);
+        end
+    endtask
+
+endclass:my_seq
+
+// ************************** UVM_AGENT **************************
+
+class my_agent extends uvm_agent;
+
+    `uvm_component_utils(my_agent)
+
+    my_monitor monitor;
+    my_driver driver;
+    uvm_sequencer sequencer;
+
+    function new(string name =" ", uvm_component parent);
+        super.new(name, parent);
+        `uvm_info("AGENT","===== Agent Constructor Called =====", UVM_LOW)
+    endfunction:new
+
+    virtual function build_phase( uvm_phase phase)
+        monitor =my_monitor::type_id::create("monitor", this);
+        driver =my_driver::type_id::create("driver",this); //Why don't we pass my_item here also?
+        sequencer =uvm_sequencer#(my_item)::type_id::create("sequencer",this)
+    endfunction: build_phase
+
+    virtual function connect_phase(uvm_phase phase)
+        driver.seq_item.port.connect(sequencer.seq_item_export);
+        `uvm_info("AGENT"," ======= Connected Driver and Sequencer ======", UVM_LOW)
+    endfunction:connect_phase
+
+endclass: my_agent
+
+// ************************** UVM_ENV **************************
+
+class my_env extends uvm_env;
+    `uvm_component_utils(my_env)
+
+    my_agent agent;
+    my_scoreboard scoreboard;
+
+    function new(string name = " ", uvm_component parent);
+        super.new(name, parent);
+        `uvm_info("ENV"," ======= Env Constructor Called =======", UVM_LOW)
+    endfunction:new
+
+    virtual function void build_phase(uvm_phase, phase);
+        super.build_phase(phase);
+        agent = my_agent::type_id::create("agent",this);
+        scoreboard = my_scoreboard::type_id::create("scoreboard",this);
+    endfunction:build_phase
+
+    virtual function connect_phase(uvm_phase, phase);
+        agent.monitor.ap.connect(scoreboard.analysis.imp);
+        `uvm_info("ENV",:"========= Connected Monitor and Scoreboard =========",UVM_LOW)
+    endfunction: connect_phase
+
+endclass: my_env
+
+// ************************** UVM_TEST **************************
+
+class my_test extends uvm_test;
+
+    `uvm_component_utils(my_test)
+
+    my_env env;
+    my_seq seq;
+
+    function new(string name = " ", uvm_component parent);
+        super.new(name, parent);
+        `uvm_info("TEST","======= Test Constructor Called ======= ", UVM_LOW)
+    endfunction:new
+
+    virtual function build_phase(uvm_phase phase);
+        super.build_phase(phase)
+        env = my_env::type_id::create("env",this);
+        seq = my_seq::type_id::create("seq", this);
+    endfunction:build_phase
+
+    virtual task run_phase(uvm_phase, phase);
+        phase.raise_objection(this);
+        seq.start(env.agent.sequencer);
+        #100;
+        phase.drop_objection(this);
+    endtask:run_phase
+
+endclass:my_test
+

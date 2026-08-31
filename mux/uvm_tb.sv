@@ -127,7 +127,7 @@ endclass: my_item
 
 class mux_env extends uvm_env;
 
-uvm_component_utils(mux_env) //registers the class with the factory
+`uvm_component_utils(mux_env) //registers the class with the factory
 
 //env has agent and scoreboard their handles go here
     mux_agent agent_h;            
@@ -148,7 +148,7 @@ endclass
 
 class mux_agent extends uvm_agent;
 
-uvm_component_utils(mux_agent)
+`uvm_component_utils(mux_agent)
 
     mux_driver driver_h;
     mux_monitor monitor_h;

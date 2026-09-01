@@ -1,52 +1,49 @@
 xrun: 22.03-s012: (c) Copyright 1995-2023 Cadence Design Systems, Inc.
-TOOL:	xrun	22.03-s012: Started on Aug 31, 2026 at 23:45:37 CDT
+TOOL:	xrun	22.03-s012: Started on Sep 01, 2026 at 16:02:46 CDT
 xrun
 	-sv
-	differ_by_two.sv
-Recompiling... reason: file './differ_by_two.sv' is newer than expected.
-	expected: Mon Aug 31 23:41:33 2026
-	actual:   Mon Aug 31 23:45:31 2026
-file: differ_by_two.sv
-	module worklib.differ_by_2:sv
+	even_odd_with_distribution.sv
+file: even_odd_with_distribution.sv
+	module worklib.test:sv
 		errors: 0, warnings: 0
 		Caching library 'worklib' ....... Done
 	Elaborating the design hierarchy:
 	Top level design units:
-		$unit_0x5efeacdf
-		differ_by_2
+		$unit_0x7db5430c
+		test
 xmelab: *W,DSEMEL: This SystemVerilog design will be simulated as per IEEE 1800-2009 SystemVerilog simulation semantics. Use -disable_sem2009 option for turning off SV 2009 simulation semantics.
 	Building instance overlay tables: .................... Done
 	Generating native compiled code:
-		worklib.differ_by_2:sv <0x605c9ebe>
-			streams:   2, words:  1873
-		worklib.\$unit_0x5efeacdf :compilation_unit <0x0e330617>
-			streams:   8, words:  2411
+		worklib.test:sv <0x3dad0f45>
+			streams:   1, words:  1617
+		worklib.\$unit_0x7db5430c :compilation_unit <0x5513cdef>
+			streams:   7, words:  1950
 	Building instance specific data structures.
 	Loading native compiled code:     .................... Done
 	Design hierarchy summary:
 		                   Instances  Unique
 		Modules:                   1       1
 		Registers:                 5       7
-		Initial blocks:            2       2
+		Initial blocks:            1       1
 		Compilation units:         1       1
 		SV Class declarations:     1       1
 		SV Class specializations:  1       1
-	Writing initial simulation snapshot: worklib.differ_by_2:sv
-Loading snapshot worklib.differ_by_2:sv .................... Done
+	Writing initial simulation snapshot: worklib.test:sv
+Loading snapshot worklib.test:sv .................... Done
 SVSEED default: 1
 xmsim: *W,DSEM2009: This SystemVerilog design is simulated as per IEEE 1800-2009 SystemVerilog simulation semantics. Use -disable_sem2009 option for turning off SV 2009 simulation semantics.
 xcelium> source /opt/coe/cadence/XCELIUM/tools/xcelium/files/xmsimrc
 xcelium> run
-Ramdomized value1 = 1010
-Ramdomized value1 = 1001
-Ramdomized value1 = 0011
-Ramdomized value1 = 0101
-Ramdomized value1 = 1111
-Ramdomized value1 = 1010
-Ramdomized value1 = 1100
-Ramdomized value1 = 1111
-Ramdomized value1 = 0011
-Ramdomized value1 = 1111
+----- Randomization successful: Value = 10100101 ----- 
+----- Randomization successful: Value = 10100110 ----- 
+----- Randomization successful: Value = 01101000 ----- 
+----- Randomization successful: Value = 00000100 ----- 
+----- Randomization successful: Value = 00010111 ----- 
+----- Randomization successful: Value = 01001111 ----- 
+----- Randomization successful: Value = 00101011 ----- 
+----- Randomization successful: Value = 10101011 ----- 
+----- Randomization successful: Value = 01010011 ----- 
+----- Randomization successful: Value = 10100011 ----- 
 xmsim: *W,RNQUIE: Simulation is complete.
 xcelium> exit
-TOOL:	xrun	22.03-s012: Exiting on Aug 31, 2026 at 23:45:37 CDT  (total: 00:00:00)
+TOOL:	xrun	22.03-s012: Exiting on Sep 01, 2026 at 16:02:48 CDT  (total: 00:00:02)

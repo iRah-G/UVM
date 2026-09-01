@@ -6,7 +6,7 @@
 ./xcelium.d/run.lnx86.22.03.d
 -RUNMODE
 -sv
-differ_by_two.sv
+even_odd_with_distribution.sv
 -CDSLIB
 ./xcelium.d/run.lnx86.22.03.d/cdsrun.lib
 -HDLVAR

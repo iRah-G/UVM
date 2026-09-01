@@ -3,8 +3,8 @@ Write a constraint where you have a 32 bit value bit [31:0] val where you’d wa
 where every randomization would only allow 2 bits to differ from the previous randomization.
 ***********/
 class packet;
-    rand bit [3:0] val;
-    bit [3:0] prev_val;
+    rand bit [31:0] val;
+    bit [31:0] prev_val;
 
     constraint c_2bit_not_eq{
         $countones(val ^ prev_val) == 2;
@@ -23,7 +23,7 @@ module differ_by_2;
     initial begin
         repeat (10) begin
             if(p.randomize()) begin
-                $display("Ramdomized value1 = %04b", p.val);
+                $display("Randomized values = %04b", p.val);
             end
             else $display("Randomization failed");
         end    
@@ -32,7 +32,10 @@ module differ_by_2;
 endmodule:differ_by_2
 
 
-/* Use this as reference
+/* Use this as reference = xor gives difference, if differ by 2 then
+
+$countones ( a ^ b ) == differ by number
+
 1011
 1101
 0110

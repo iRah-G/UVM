@@ -14,5 +14,19 @@ int main()
     // Using cout to print a variable
     int age =20;
     cout<< "Xavier is only"<< age <<"Years old!" << endl;
+
+    // In modern ccpp, we have print along with cout
+    // But print is part of the header file - print, so we need to include that!
+    /*
+    print("Hello World");
+    std::print("{}",age);
+    */
     
+    // cpp can also use c style printf for printing
+    printf("Hello World"); //This again doesnt print on new lines
+    printf("\nAustin is the capital of Texas\n");
+
+    string name = "Nathan Ellis";
+    cout << name <<endl;
+    return 0;
 }

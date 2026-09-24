@@ -37,6 +37,32 @@ module parallel_tasks;
                 $display("[TIME: %0t], Process 3 completed", $time);
             end
 
-            begin
-    end
+            begin: process_4
+                automatic int random_delay = $urandom_range(1, 20);
+                #(random_delay);
+                sem.put(1);
+                $display("[TIME: %0t], Process 4 completed", $time);
+            end
 
+            begin: process_5
+                automatic int random_delay = $urandom_range(10,30);
+                #random_delay;
+                sem.put(1);
+                $display("[TIME: %0t], Process 5 completed", $time);
+            end
+
+            //The below process monitors the 5 parallel processes
+            begin: monitor_process
+                sem.get(4); //Get is a blocking call. Until 4 keys are available this line blocks the execution of the lines below
+                $display("[TIME: %0t], Execution of 4 processes completed", $time);
+                disable processes
+
+                // Since this monitor process is nested inside the block called "processes",
+                // any line after the above line will not execute as the entire block is killed. 
+
+                // To avoid this we can use another block after the fork and then nest all the 5 processes inside that block
+
+            end
+        join
+    end
+endmodule

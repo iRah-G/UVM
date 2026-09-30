@@ -1,30 +1,33 @@
 xrun: 22.03-s012: (c) Copyright 1995-2023 Cadence Design Systems, Inc.
-TOOL:	xrun	22.03-s012: Started on Sep 01, 2026 at 16:02:46 CDT
+TOOL:	xrun	22.03-s012: Started on Sep 27, 2026 at 14:27:57 CDT
 xrun
+	rand_dynamic_arrays.sv
 	-sv
-	even_odd_with_distribution.sv
-file: even_odd_with_distribution.sv
+Recompiling... reason: file './rand_dynamic_arrays.sv' is newer than expected.
+	expected: Sun Sep 27 14:19:07 2026
+	actual:   Sun Sep 27 14:27:54 2026
+file: rand_dynamic_arrays.sv
 	module worklib.test:sv
 		errors: 0, warnings: 0
 		Caching library 'worklib' ....... Done
 	Elaborating the design hierarchy:
 	Top level design units:
-		$unit_0x7db5430c
+		$unit_0x5fbf9c31
 		test
 xmelab: *W,DSEMEL: This SystemVerilog design will be simulated as per IEEE 1800-2009 SystemVerilog simulation semantics. Use -disable_sem2009 option for turning off SV 2009 simulation semantics.
 	Building instance overlay tables: .................... Done
 	Generating native compiled code:
-		worklib.test:sv <0x3dad0f45>
-			streams:   1, words:  1617
-		worklib.\$unit_0x7db5430c :compilation_unit <0x5513cdef>
-			streams:   7, words:  1950
+		worklib.test:sv <0x13861adf>
+			streams:   2, words:  2534
+		worklib.\$unit_0x5fbf9c31 :compilation_unit <0x3693210f>
+			streams:   7, words:  2304
 	Building instance specific data structures.
 	Loading native compiled code:     .................... Done
 	Design hierarchy summary:
 		                   Instances  Unique
 		Modules:                   1       1
 		Registers:                 5       7
-		Initial blocks:            1       1
+		Initial blocks:            2       2
 		Compilation units:         1       1
 		SV Class declarations:     1       1
 		SV Class specializations:  1       1
@@ -34,16 +37,16 @@ SVSEED default: 1
 xmsim: *W,DSEM2009: This SystemVerilog design is simulated as per IEEE 1800-2009 SystemVerilog simulation semantics. Use -disable_sem2009 option for turning off SV 2009 simulation semantics.
 xcelium> source /opt/coe/cadence/XCELIUM/tools/xcelium/files/xmsimrc
 xcelium> run
------ Randomization successful: Value = 10100101 ----- 
------ Randomization successful: Value = 10100110 ----- 
------ Randomization successful: Value = 01101000 ----- 
------ Randomization successful: Value = 00000100 ----- 
------ Randomization successful: Value = 00010111 ----- 
------ Randomization successful: Value = 01001111 ----- 
------ Randomization successful: Value = 00101011 ----- 
------ Randomization successful: Value = 10101011 ----- 
------ Randomization successful: Value = 01010011 ----- 
------ Randomization successful: Value = 10100011 ----- 
+Randomization successful array1 = '{14, 18, 35, 49, 63, 73, 85, 88}
+------------------------ array2 = '{14, 18, 35, 49, 63, 73, 85, 88}
+Randomization successful array1 = '{11, 38, 50, 53, 59, 62, 79, 80, 86}
+------------------------ array2 = '{11, 38, 50, 53, 59, 62, 79, 80, 86}
+Randomization successful array1 = '{4, 35, 43, 46, 55, 72, 81, 98}
+------------------------ array2 = '{4, 35, 43, 46, 55, 72, 81, 98}
+Randomization successful array1 = '{54, 54, 54, 54, 61, 66, 74, 77}
+------------------------ array2 = '{54, 54, 54, 54, 61, 66, 74, 77}
+Randomization successful array1 = '{2, 11, 13, 14, 23, 29}
+------------------------ array2 = '{2, 11, 13, 14, 23, 29}
 xmsim: *W,RNQUIE: Simulation is complete.
 xcelium> exit
-TOOL:	xrun	22.03-s012: Exiting on Sep 01, 2026 at 16:02:48 CDT  (total: 00:00:02)
+TOOL:	xrun	22.03-s012: Exiting on Sep 27, 2026 at 14:27:59 CDT  (total: 00:00:02)

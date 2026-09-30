@@ -30,3 +30,9 @@ s29(01Sep2026:15:58:41):  xrun -sv even_odd_with_distribution.sv
 s30(01Sep2026:15:59:42):  xrun -sv even_odd_with_distribution.sv 
 s31(01Sep2026:16:01:53):  xrun -sv even_odd_with_distribution.sv 
 s32(01Sep2026:16:02:46):  xrun -sv even_odd_with_distribution.sv 
+s33(27Sep2026:11:00:48):  xrun generate_power_of_2.sv -sv 
+s34(27Sep2026:14:17:25):  xrun rand_dynamic_arrays.sv -sv 
+s35(27Sep2026:14:18:35):  xrun rand_dynamic_arrays.sv -sv 
+s36(27Sep2026:14:19:12):  xrun rand_dynamic_arrays.sv -sv 
+s37(27Sep2026:14:20:38):  xrun rand_dynamic_arrays.sv -sv 
+s38(27Sep2026:14:27:57):  xrun rand_dynamic_arrays.sv -sv 

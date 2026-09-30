@@ -14,7 +14,7 @@ class packet;
     }
 
     constraint c_check_previous_val{
-        //If previous value is even, then the next random number has to be odd
+        //If previous valuec is even, then the next random number has to be odd
         if(prev_val) {
             val%2 ==1;
         }

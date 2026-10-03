@@ -48,6 +48,26 @@ end
 endmodule
 
 // *********** UVM tb.sv ***********
+module tb;
+
+    adder_if aif();
+
+    adder dut (
+        .a(aif.a),
+        .b(aif.b),
+        .sum(aif.sum)
+    );
+
+    initial begin
+
+        uvm_config_db#(virtual adder_if)::set(
+            null, "*", "vif", aif);
+
+        run_test("adder_test");
+
+    end
+
+endmodule
 
 // :::::::::::: adder_if.sv :::::::::
 
@@ -74,4 +94,91 @@ class transaction extends uvm_sequence_item;
     endfunction
 
 endclass
+
+// :::::::::::: sequence.sv :::::::::
+
+class adder_sequence extends uvm_sequence;
+
+    `uvm_object_utils(adder_sequence)
+
+    function new(string name = "adder_sequence");
+        super.new(name);
+    endfunction
+
+    task body();
+
+        transaction tr;
+
+        repeat(10) begin
+
+            tr = transaction::type_id::create("tr");
+
+            start_item(tr);
+
+            assert(tr.randomize());
+
+            finish_item(tr);
+
+        end
+    endtask
+    
+endclass
+
+// :::::::::::: driver.sv :::::::::
+
+class adder_driver extends uvm_driver #(transaction);
+
+    `uvm_component_utils(adder_driver)
+
+    virtual adder_if vif;
+
+// Constructor new()
+    function new(string name = "adder_driver", uvm_component parent = null);
+        super.new(name, parent);
+    endfunction
+
+// Build
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        uvm_config_db#(virtual adder_if)::get(this, "", "vif", vif);
+    endfunction
+
+    task run_phase(uvm_phase phase);
+
+        forever begin
+
+            seq_item_port.get_next_item(req);
+
+            vif.a = req.a;
+            vif.b = req.b;
+
+            #1;
+
+            seq_item_port.item_done();
+        end
+
+    endtask
+endclass
+
+// :::::::::::: monitor.sv :::::::::
+
+class adder_monitor extends uvm_monior;
+
+    `uvm_component_utils(adder_monitor)
+
+    function new(string name = "adder_monitor",uvm_component parent = null);
+        super.new(name, parent)
+    endfunction
+
+    function build_phase( uvm_phase phase)
+        
+    endfunction
+
+
+endclass
+
+
+
+
+
 

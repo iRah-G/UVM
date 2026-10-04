@@ -2,5 +2,5 @@
 // File created by:  xrun
 // Do not modify this file
 //
-rand_dynamic_arrays.sv
+array_payload_generation.sv
 -sv

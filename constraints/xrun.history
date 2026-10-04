@@ -36,3 +36,9 @@ s35(27Sep2026:14:18:35):  xrun rand_dynamic_arrays.sv -sv
 s36(27Sep2026:14:19:12):  xrun rand_dynamic_arrays.sv -sv 
 s37(27Sep2026:14:20:38):  xrun rand_dynamic_arrays.sv -sv 
 s38(27Sep2026:14:27:57):  xrun rand_dynamic_arrays.sv -sv 
+s39(03Oct2026:18:01:27):  xrun -f array_payload_generation.sv -sv 
+s40(03Oct2026:18:02:25):  xrun array_payload_generation.sv -sv 
+s41(03Oct2026:18:06:28):  xrun array_payload_generation.sv -sv 
+s42(03Oct2026:18:09:52):  xrun array_payload_generation.sv -sv 
+s43(03Oct2026:18:12:22):  xrun array_payload_generation.sv -sv 
+s44(03Oct2026:18:14:30):  xrun array_payload_generation.sv -sv 

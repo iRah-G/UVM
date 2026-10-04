@@ -1,52 +1,49 @@
 xrun: 22.03-s012: (c) Copyright 1995-2023 Cadence Design Systems, Inc.
-TOOL:	xrun	22.03-s012: Started on Sep 27, 2026 at 14:27:57 CDT
+TOOL:	xrun	22.03-s012: Started on Oct 03, 2026 at 18:14:30 CDT
 xrun
-	rand_dynamic_arrays.sv
+	array_payload_generation.sv
 	-sv
-Recompiling... reason: file './rand_dynamic_arrays.sv' is newer than expected.
-	expected: Sun Sep 27 14:19:07 2026
-	actual:   Sun Sep 27 14:27:54 2026
-file: rand_dynamic_arrays.sv
-	module worklib.test:sv
-		errors: 0, warnings: 0
 		Caching library 'worklib' ....... Done
 	Elaborating the design hierarchy:
 	Top level design units:
-		$unit_0x5fbf9c31
+		$unit_0x6c0ef569
 		test
 xmelab: *W,DSEMEL: This SystemVerilog design will be simulated as per IEEE 1800-2009 SystemVerilog simulation semantics. Use -disable_sem2009 option for turning off SV 2009 simulation semantics.
 	Building instance overlay tables: .................... Done
 	Generating native compiled code:
-		worklib.test:sv <0x13861adf>
-			streams:   2, words:  2534
-		worklib.\$unit_0x5fbf9c31 :compilation_unit <0x3693210f>
-			streams:   7, words:  2304
+		worklib.test:sv <0x527023b5>
+			streams:   8, words:  7782
+		worklib.\$unit_0x6c0ef569 :compilation_unit <0x352651f0>
+			streams:  14, words:  5029
 	Building instance specific data structures.
 	Loading native compiled code:     .................... Done
 	Design hierarchy summary:
-		                   Instances  Unique
-		Modules:                   1       1
-		Registers:                 5       7
-		Initial blocks:            2       2
-		Compilation units:         1       1
-		SV Class declarations:     1       1
-		SV Class specializations:  1       1
+		                    Instances  Unique
+		Modules:                    1       1
+		Registers:                 16      20
+		Initial blocks:             8       8
+		Compilation units:          1       1
+		SV Class declarations:      2       2
+		SV Class specializations:   2       2
 	Writing initial simulation snapshot: worklib.test:sv
 Loading snapshot worklib.test:sv .................... Done
 SVSEED default: 1
 xmsim: *W,DSEM2009: This SystemVerilog design is simulated as per IEEE 1800-2009 SystemVerilog simulation semantics. Use -disable_sem2009 option for turning off SV 2009 simulation semantics.
 xcelium> source /opt/coe/cadence/XCELIUM/tools/xcelium/files/xmsimrc
 xcelium> run
-Randomization successful array1 = '{14, 18, 35, 49, 63, 73, 85, 88}
------------------------- array2 = '{14, 18, 35, 49, 63, 73, 85, 88}
-Randomization successful array1 = '{11, 38, 50, 53, 59, 62, 79, 80, 86}
------------------------- array2 = '{11, 38, 50, 53, 59, 62, 79, 80, 86}
-Randomization successful array1 = '{4, 35, 43, 46, 55, 72, 81, 98}
------------------------- array2 = '{4, 35, 43, 46, 55, 72, 81, 98}
-Randomization successful array1 = '{54, 54, 54, 54, 61, 66, 74, 77}
------------------------- array2 = '{54, 54, 54, 54, 61, 66, 74, 77}
-Randomization successful array1 = '{2, 11, 13, 14, 23, 29}
------------------------- array2 = '{2, 11, 13, 14, 23, 29}
+xmsim: *W,OLDURR: The default algorithm for $urandom_range and randcase is used. It can have distribution problems..
+------ Array Generated Just Simple Programming ------
+P1 Array elements: '{83, 8, 53, 70, 43, 81, 32, 99, 48, 49}
+P2 Array elements: '{67, 46, 12, 72, 40, 4, 71, 81, 49, 94, 52, 82, 23, 48, 27, 98}
+P3 Array elements: '{90, 66, 83, 21, 3, 98, 30, 56, 65, 37, 61, 18}
+P4 Array elements: '{4, 98, 35, 51, 2, 7, 57, 88, 92, 18, 80, 70, 65}
+P5 Array elements: '{42, 1, 82, 80, 63, 36, 70, 99, 74, 69, 39, 14, 83, 15, 91}
+-----Array Generated using randomization and constraints-----
+array elements: '{67, 92, 65, 80, 55, 10, 98, 61, 20, 19, 43, 45, 30, 90, 72, 18, 74, 46, 66}
+array elements: '{96, 12, 19, 50, 6, 37, 30, 58, 94, 22, 54, 68, 8}
+array elements: '{28, 7, 1, 67, 61, 96, 54, 42, 84, 59, 46, 78, 79, 8, 14, 36, 98, 55}
+array elements: '{52, 61, 91, 34, 44, 77, 10, 33, 81, 92, 97, 76, 60, 54, 80, 46, 79, 99}
+array elements: '{40, 42, 71, 39, 53, 67, 11, 93, 59, 83, 21, 7}
 xmsim: *W,RNQUIE: Simulation is complete.
 xcelium> exit
-TOOL:	xrun	22.03-s012: Exiting on Sep 27, 2026 at 14:27:59 CDT  (total: 00:00:02)
+TOOL:	xrun	22.03-s012: Exiting on Oct 03, 2026 at 18:14:31 CDT  (total: 00:00:01)

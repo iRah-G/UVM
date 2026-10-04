@@ -5,7 +5,7 @@
 -XLMODE
 ./xcelium.d/run.lnx86.22.03.d
 -RUNMODE
-rand_dynamic_arrays.sv
+array_payload_generation.sv
 -sv
 -CDSLIB
 ./xcelium.d/run.lnx86.22.03.d/cdsrun.lib

@@ -26,5 +26,3 @@ Explanation:
 
 1011 = 3
 
-arr[i]
-foreach

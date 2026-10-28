@@ -7,3 +7,6 @@
 // There can be more than one outstanding req and there can be back to back req
 // For every req there must be an individual ack
 // Write a checker for this design
+
+// write this using $time
+

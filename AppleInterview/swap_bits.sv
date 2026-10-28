@@ -2,7 +2,9 @@
 
 module swap;
 
-    logic bit in[7:0];
-    logic bit out[7:0];
-    
+    input logic  [7:0] in;
+    output logic  [7:0] out;
+
+        assign out = ((in & 8'hAA)>> 1) | ((in & 8'h55) << 1);
+
 endmodule
